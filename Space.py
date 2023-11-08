@@ -2,21 +2,23 @@ import Invader
 import Canon
 import time
 import keyboard
+import threading
 
 class Space:
     
     grille = []
     
-    def __init__(self, nb_c,nb_l, positionCanonInitiale):
+    def __init__(self, nb_c,nb_l, positionCanonInitiale, invaderPos = 0):
         self.nb_l=nb_l
         self.nb_c=nb_c
         self.score=0
+        self.invaderPos = invaderPos
         self.positionCanonInitiale=positionCanonInitiale
         self.canon = Canon.Canon(positionCanonInitiale)
         self.grille = [[0]*nb_c for l in range(nb_l+1)]      
         for l in range(nb_l+1):
             for c in range(nb_c):
-                if(l == 0):
+                if(l == self.invaderPos):
                     self.grille[l][c] =str(Invader.Invader())
                 else:self.grille[l][c] = ' '
         self.grille[self.nb_l][self.positionCanonInitiale] =str(self.canon) 
@@ -41,10 +43,10 @@ class Space:
             print(col+"|")
             
         self.cadreLigne('└', ' ┘')
-        
+
             
     def __repr__(self):
-        return self.data
+        return self.grille
         
     def tirer(self):
         self.grille[self.nb_l-1][self.canon.pos]="^"
@@ -61,7 +63,7 @@ class Space:
     # def onkeypress(self,event):
     #     time.sleep(5)
     def deplacerCanonLeft(self):
-        if(self.canon.pos>1): 
+        if(self.canon.pos>0): 
             self.grille[self.nb_l][self.canon.pos] =' '
             self.canon.deplacerAGauche()   
             self.grille[self.nb_l][self.canon.pos] =str(self.canon)        
@@ -75,15 +77,43 @@ class Space:
             self.afficher()
             
     # keyboard.on_press(onkeypress)  
-    
-    
-                
+    def deplacerInvaders(self): 
+        if self.invaderPos< (self.nb_l -1) and self.score != 6:       
+            for l in range(0, self.nb_l-1 ):
+                time.sleep(3) 
+                for c in range(self.nb_c):
+                    if self.grille[self.invaderPos][c] != ' ':
+                        self.grille[self.invaderPos+1][c] =str(Invader.Invader())
+                        self.grille[self.invaderPos][c] = ' '
+                self.invaderPos += 1   
+                self.afficher()
+        # if self.invaderPos ==  (self.nb_l -1) and  self.score != 6:
+        #     print(self.invaderPos)
+        #     print('game over !Do you want to play again(y for yes n for no)')  
+        #     if keyboard.is_pressed("y"):
+        #         print('you said yes')
+        #         space = Space(6,4,2)
+        #         space.afficher()  
 space = Space(6,4,2)
+t1 = threading.Thread(target = space.deplacerInvaders)  
+t1.daemon = True # With this parameter, the thread functions stops when you stop the main program
+t1.start()  
 space.afficher()
+time.sleep(2)      
+# space.deplacerInvaders()
+# time.sleep(4)
 # space.tirer()
 # print(space)
 # print(space.canon)
-while True:
+if space.score ==0 and space.invaderPos== space.nb_l:
+            print('game over!')
+match space.score:
+    case 6:
+        print('Congratulation you\'re a winner!')
+    case 1:
+        print('Good start!')
+
+while True:      
         if keyboard.is_pressed("Left"):
             space.deplacerCanonLeft()
             time.sleep(0.2)
@@ -98,3 +128,6 @@ while True:
             
         elif keyboard.is_pressed("Esc"):
             break  
+        
+        
+            

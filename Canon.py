@@ -7,7 +7,7 @@ class Canon:
         return '¥' 
     
     def deplacerAGauche(self):
-        if (self.pos>1):
+        if (self.pos>0):
             self.pos = self.pos-1
             
     def deplacerADroite(self):
