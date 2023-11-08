@@ -79,7 +79,7 @@ class Space:
     # keyboard.on_press(onkeypress)  
     def deplacerInvaders(self): 
         if self.invaderPos< (self.nb_l -1) and self.score != 6:       
-            for l in range(0, self.nb_l-1 ):
+            for l in range(0, self.nb_l ):
                 time.sleep(3) 
                 for c in range(self.nb_c):
                     if self.grille[self.invaderPos][c] != ' ':
@@ -105,8 +105,7 @@ time.sleep(2)
 # space.tirer()
 # print(space)
 # print(space.canon)
-if space.score ==0 and space.invaderPos== space.nb_l:
-            print('game over!')
+
 match space.score:
     case 6:
         print('Congratulation you\'re a winner!')
@@ -129,5 +128,8 @@ while True:
         elif keyboard.is_pressed("Esc"):
             break  
         
-        
+        if space.score !=6 and space.invaderPos== space.nb_l:
+            print('game over!')
+            break
             
+ 
