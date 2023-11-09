@@ -59,6 +59,13 @@ class Space:
             time.sleep(d/10) 
             self.afficher()
             self.grille[self.nb_l-d][self.canon.pos]=" "
+            match self.score:
+                case 6:
+                    print('Congratulation you\'re a winner!')
+                    break
+                case 1:
+                    print( 'Good start!') 
+ 
             
     # def onkeypress(self,event):
     #     time.sleep(5)
@@ -80,7 +87,7 @@ class Space:
     def deplacerInvaders(self): 
         if self.invaderPos< (self.nb_l -1) and self.score != 6:       
             for l in range(0, self.nb_l ):
-                time.sleep(3) 
+                time.sleep(4) 
                 for c in range(self.nb_c):
                     if self.grille[self.invaderPos][c] != ' ':
                         self.grille[self.invaderPos+1][c] =str(Invader.Invader())
@@ -94,23 +101,23 @@ class Space:
         #         print('you said yes')
         #         space = Space(6,4,2)
         #         space.afficher()  
+        
+   
+    
 space = Space(6,4,2)
 t1 = threading.Thread(target = space.deplacerInvaders)  
 t1.daemon = True # With this parameter, the thread functions stops when you stop the main program
 t1.start()  
 space.afficher()
-time.sleep(2)      
+time.sleep(2) 
+print('let\'s start!')     
 # space.deplacerInvaders()
 # time.sleep(4)
 # space.tirer()
 # print(space)
 # print(space.canon)
 
-match space.score:
-    case 6:
-        print('Congratulation you\'re a winner!')
-    case 1:
-        print('Good start!')
+
 
 while True:      
         if keyboard.is_pressed("Left"):
@@ -131,5 +138,5 @@ while True:
         if space.score !=6 and space.invaderPos== space.nb_l:
             print('game over!')
             break
-            
- 
+        
+        
